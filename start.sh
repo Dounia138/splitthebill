@@ -1,13 +1,29 @@
 #!/bin/bash
 
-npm install
+set -e
+
+# Install root dependencies
+docker run --rm -v $(pwd):/app -w /app node:16-alpine npm install
+
+# Setup back
 cd back
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
+docker run --rm -v $(pwd):/app -w /app composer:latest \
+  composer install
+docker run --rm -v $(pwd):/app -w /app node:16-alpine \
+  npm install
+docker run --rm -v $(pwd):/app -w /app php:8.1-cli-alpine \
+  php artisan key:generate
 cd ..
+
+# Start back (Laravel + MariaDB) and front containers
 npm start
+
+# Migrate database
+cd back
+docker run --rm -v $(pwd):/app -w /app php:8.1-cli-alpine \
+  docker-php-ext-install mysqli pdo pdo_mysql && \
+  php artisan migrate
+cd ..
 
 BLUE='\033[0;34m'
 BOLD='\033[1;37m'
