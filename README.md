@@ -6,8 +6,6 @@ The project is available [here](https://github.com/users/bdauphouy/projects/2).
 
 - Make
 - Docker
-- Composer
-- PHP >= 8
 
 ## Getting Started
 
