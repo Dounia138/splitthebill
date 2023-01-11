@@ -12,7 +12,7 @@ export class UsersRepo {
     }
   }
 
-  static async login(): Promise<{ token: string }> {
+  static async login(email: string, password: string): Promise<{ token: string }> {
     // POST /users/login
     return {
       token: 'this-is-a-token',
