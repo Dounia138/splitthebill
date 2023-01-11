@@ -1,7 +1,7 @@
-import { Alert } from 'flowbite-react'
+import Router from '$components/Router'
 
 const App = () => {
-  return <Alert color="info">feur</Alert>
+  return <Router />
 }
 
 export default App
