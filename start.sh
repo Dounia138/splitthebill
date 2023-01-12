@@ -2,6 +2,9 @@
 
 set -e
 
+# load ./back/.env file
+export $(grep -v '^#' ./back/.env | xargs)
+
 # Install root dependencies
 docker run --rm -v $(pwd):/app -w /app node:16-alpine npm install
 
@@ -22,7 +25,7 @@ npm start
 cd back
 docker run --rm -v $(pwd):/app -w /app php:8.1-cli-alpine \
   docker-php-ext-install mysqli pdo pdo_mysql && \
-  php artisan migrate
+  DB_HOST=$DB_ARTISAN_HOST php artisan migrate
 cd ..
 
 BLUE='\033[0;34m'
