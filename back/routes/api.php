@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AppartmentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +24,8 @@ Route::post('/users/login', [AuthController::class, 'login']);
 Route::post('/users/register', [AuthController::class, 'register']);
 Route::post('/users/me/logout', [AuthController::class, 'logout']);
 Route::get('/users/me/refresh', [AuthController::class, 'refresh']);
+
+Route::get('/users/me/appartment', [AppartmentController::class, 'getAppartment']);
+Route::post('/appartments', [AppartmentController::class, 'create']);
+Route::put('/users/me/appartment', [AppartmentController::class, 'setAppartment']);
+Route::delete('/users/me/appartment',  [AppartmentController::class, 'delete']);
