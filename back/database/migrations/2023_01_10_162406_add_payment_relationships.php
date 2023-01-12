@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->foreign('payer_id')->references('id')->on('user');
-            $table->foreign('for_ticket_id')->references('id')->on('ticket');
+            $table->foreign('payer_id')->references('id')->on('users');
+            $table->foreign('for_ticket_id')->references('id')->on('tickets');
         });
     }
 
