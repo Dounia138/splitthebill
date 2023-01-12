@@ -20,6 +20,7 @@ export class PaymentsRepo {
               id: 1,
               name: 'Ticket 1',
               amount: 400,
+              dueDate: '12/12/23',
               creator: {
                 id: 2,
                 name: 'Mate 1',
@@ -54,6 +55,7 @@ export class PaymentsRepo {
             id: 1,
             name: 'Ticket 1',
             amount: 400,
+            dueDate: '12/12/23',
             creator: {
               id: 2,
               name: 'Mate 1',
