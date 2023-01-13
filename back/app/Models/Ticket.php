@@ -25,8 +25,8 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'creator_id');
     }
 
-    public function payments()
+    public function owesPayment()
     {
-        return $this->hasMany(Payment::class, 'for_ticket_id', 'id');
+        return $this->hasMany(Ticket::class, 'for_ticket_id', 'id');
     }
 }

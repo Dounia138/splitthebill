@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class PaymentSeeder extends Seeder
+class OwesPaymentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,10 +14,9 @@ class PaymentSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('payments')->insert([
-            'payer_id' => 1,
-            'amount' => 100,
-            'for_owes_payment_id' => 1
+        DB::table('owes_payments')->insert([
+            'requested_amount' => 100,
+            'for_ticket_id' => 1
         ]);
     }
 }
