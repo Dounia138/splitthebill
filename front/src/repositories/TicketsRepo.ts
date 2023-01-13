@@ -7,6 +7,7 @@ export class TicketsRepo {
           id: 1,
           name: 'Ticket 1',
           amount: 400,
+          dueDate: '12/12/23',
           creator: {
             id: 1,
             name: 'Me',
@@ -26,6 +27,7 @@ export class TicketsRepo {
         id: 1,
         name: 'Ticket 1',
         amount: 400,
+        dueDate: '12/12/23',
         creator: {
           id: 1,
           name: 'Me',
