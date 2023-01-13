@@ -1,5 +1,18 @@
+import { FormEvent, useState } from "react"
+import { UsersRepo } from "../repositories/UsersRepo"
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
 
 const Login = () => {
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.target as HTMLFormElement);
+    UsersRepo.login(data.get('email') as string, data.get('password') as string)
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -13,7 +26,7 @@ const Login = () => {
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" action="#" method="POST">
+            <form className="space-y-6" method="POST" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Email address
@@ -29,7 +42,6 @@ const Login = () => {
                   />
                 </div>
               </div>
-
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Password
@@ -52,7 +64,7 @@ const Login = () => {
                 >
                   Sign in
                 </button>
-                <p className="text-sm font-light text-gray-500 dark:text-gray-400 mt-4"> 
+                <p className="text-sm font-light text-gray-500 dark:text-gray-400 mt-4">
                   Don’t have an account yet ? <a href="/inscription" className="font-medium ml-1 text-indigo-600 hover:underline dark:text-primary-500">Sign up</a>
                 </p>
               </div>
