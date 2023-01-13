@@ -194,9 +194,12 @@ const DashboardLayout = () => {
                     <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
                       Mate 1
                     </p>
-                    <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
-                      View profile
-                    </p>
+                    <a
+                      href="/parametres"
+                      className="text-xs font-medium text-gray-500 group-hover:text-gray-700"
+                    >
+                      Paramètres du compte
+                    </a>
                   </div>
                 </div>
               </a>
