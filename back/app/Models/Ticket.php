@@ -17,6 +17,7 @@ class Ticket extends Model
     protected $fillable = [
         'amount',
         'creator_id',
+        'expiration_date',
     ];
 
     public function creator()

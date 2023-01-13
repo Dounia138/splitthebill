@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AppartmentController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,3 +34,8 @@ Route::get('/users/me/appartment', [AppartmentController::class, 'getAppartment'
 Route::post('/appartments', [AppartmentController::class, 'create']);
 Route::put('/users/me/appartment', [AppartmentController::class, 'setAppartment']);
 Route::delete('/users/me/appartment',  [AppartmentController::class, 'delete']);
+
+Route::get('/users/me/appartment/tickets', [TicketController::class, 'findAppartmentTickets']);
+Route::post('/users/me/appartment/tickets', [TicketController::class, 'createTicket']);
+Route::delete('/users/me/appartment/tickets/{ticket_id}', [TicketController::class, 'deleteTicket']);
+
