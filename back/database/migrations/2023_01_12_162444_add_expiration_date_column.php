@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->dateTime('expiration_date')->default(new Expression('CURRENT_TIMESTAMP'));
+            $table->dateTime('expiration_date')->nullable();
         });
     }
 

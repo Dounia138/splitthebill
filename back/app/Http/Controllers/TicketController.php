@@ -39,13 +39,15 @@ class TicketController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric',
+            'expiration_date' => 'optional|date'
         ]);
 
         $user = Auth::user();
         $ticket = Ticket::create([
             'name' => $request->name,
             'amount' => $request->amount,
+            'expiration_date' => $request->expiration_date,
             'creator_id' => $user->id
         ]);
         $ticket['creator'] = $ticket->creator;
