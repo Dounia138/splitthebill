@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('payer_id');
             $table->float('amount');
-            $table->unsignedBigInteger('for_ticket_id');
+            $table->unsignedBigInteger('for_owes_payment_id');
             $table->timestamps();
         });
     }

@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('appartment_id')->references('id')->on('appartments');
+        Schema::table('tickets', function (Blueprint $table) {
+            $table->string('name');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['appartment_id']);
+        Schema::table('tickets', function (Blueprint $table) {
+            $table->dropColumn('name');
         });
     }
 };

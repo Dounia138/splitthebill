@@ -16,7 +16,7 @@ class Payment extends Model
      */
     protected $fillable = [
         'amount',
-        'for_ticket_id',
+        'for_owes_payment_id',
         'payer_id',
     ];
 
@@ -25,8 +25,8 @@ class Payment extends Model
         return $this->belongsTo(User::class, 'payer_id');
     }
 
-    public function ticket()
+    public function owesPayment()
     {
-        return $this->belongsTo(Ticket::class, 'for_ticket_id');
+        return $this->belongsTo(OwesPayment::class, 'for_owes_payment_id');
     }
 }

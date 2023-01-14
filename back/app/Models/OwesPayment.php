@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ticket extends Model
+class OwesPayment extends Model
 {
     use HasFactory;
 
@@ -15,18 +15,12 @@ class Ticket extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'amount',
-        'creator_id',
-        'expiration_date',
+        'requested_amount',
+        'for_ticket_id',
     ];
 
-    public function creator()
+    public function ticket()
     {
-        return $this->belongsTo(User::class, 'creator_id');
-    }
-
-    public function owesPayment()
-    {
-        return $this->hasMany(Ticket::class, 'for_ticket_id', 'id');
+        return $this->belongsTo(Ticket::class, 'for_ticket_id');
     }
 }

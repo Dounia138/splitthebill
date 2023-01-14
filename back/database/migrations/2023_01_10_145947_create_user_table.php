@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('appartment_id')->nullable();
-            $table->boolean('is_admin');
+            $table->boolean('is_admin')->default(false);
             $table->string('name');
             $table->string('email');
             $table->string('phone_number');

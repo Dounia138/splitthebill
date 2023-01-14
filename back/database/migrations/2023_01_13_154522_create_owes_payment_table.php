@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->foreign('payer_id')->references('id')->on('users');
-            $table->foreign('for_ticket_id')->references('id')->on('tickets');
+        Schema::create('owes_payments', function (Blueprint $table) {
+            $table->id();
+            $table->float('requested_amount');
+            $table->unsignedBigInteger('for_ticket_id');
         });
     }
 
@@ -26,9 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->dropForeign(['payer_id']);
-            $table->dropForeign(['for_ticket_id']);
-        });
+        Schema::dropIfExists('owes_payment');
     }
 };
