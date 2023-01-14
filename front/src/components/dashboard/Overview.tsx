@@ -3,8 +3,8 @@ import classnames from 'classnames'
 
 import { CalendarIcon, MapPinIcon, UsersIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState } from 'react'
-import { TicketsRepo } from '$repositories/TicketsRepo'
-import { PaymentsRepo } from '$repositories/PaymentsRepo'
+import { TicketsRepo } from '@/repositories/TicketsRepo'
+import { PaymentsRepo } from '@/repositories/PaymentsRepo'
 import { CurrencyEuroIcon } from '@heroicons/react/24/outline'
 
 const priceBoxes = [

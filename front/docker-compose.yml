@@ -5,8 +5,8 @@ services:
     container_name: front
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     volumes:
       - ./src:/app/src
     ports:
-      - 8080:5173
+      - 8080:4173
