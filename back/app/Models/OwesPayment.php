@@ -17,10 +17,16 @@ class OwesPayment extends Model
     protected $fillable = [
         'requested_amount',
         'for_ticket_id',
+        'payer_id',
     ];
 
     public function ticket()
     {
         return $this->belongsTo(Ticket::class, 'for_ticket_id');
+    }
+
+    public function payer()
+    {
+        return $this->belongsTo(User::class, 'payer_id');
     }
 }
