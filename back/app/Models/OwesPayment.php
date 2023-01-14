@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payment extends Model
+class OwesPayment extends Model
 {
     use HasFactory;
 
@@ -15,18 +15,12 @@ class Payment extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'amount',
-        'for_owes_payment_id',
-        'payer_id',
+        'requested_amount',
+        'for_ticket_id',
     ];
 
-    public function payer()
+    public function ticket()
     {
-        return $this->belongsTo(User::class, 'payer_id');
-    }
-
-    public function owesPayment()
-    {
-        return $this->belongsTo(OwesPayment::class, 'for_owes_payment_id');
+        return $this->belongsTo(Ticket::class, 'for_ticket_id');
     }
 }
