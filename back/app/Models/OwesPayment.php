@@ -20,9 +20,14 @@ class OwesPayment extends Model
         'payer_id',
     ];
 
-    public function ticket()
+    public function forTicket()
     {
         return $this->belongsTo(Ticket::class, 'for_ticket_id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'for_owes_payment_id');
     }
 
     public function payer()

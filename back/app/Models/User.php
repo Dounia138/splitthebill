@@ -34,20 +34,25 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
-    public function appartment()
-    {
-        return $this->belongsTo(Appartment::class, 'appartment_id', 'id');
-    }
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<int, string>
+     */
+    protected $casts = [
+        'is_admin' => 'boolean',
+    ];
 
-    public function tickets()
-    {
-        return $this->hasMany(Ticket::class, 'creator_id', 'id');
-    }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class, 'payer_id', 'id');
-    }
+    /**
+     * The attributes that should be appended.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'tickets',
+        'payments',
+        'owes_payments',
+    ];
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -67,5 +72,40 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function appartment()
+    {
+        return $this->belongsTo(Appartment::class, 'appartment_id', 'id');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'creator_id', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'payer_id', 'id');
+    }
+
+    public function owesPayments()
+    {
+        return $this->hasMany(OwesPayment::class, 'payer_id', 'id');
+    }
+
+    public function getTicketsAttribute()
+    {
+        return $this->tickets()->get();
+    }
+
+    public function getPaymentsAttribute()
+    {
+        return $this->payments()->get();
+    }
+
+    public function getOwesPaymentsAttribute()
+    {
+        return $this->owesPayments()->get();
     }
 }

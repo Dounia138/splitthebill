@@ -8,11 +8,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-function findResidents(Appartment $appartment) {
-    $appartment['residents'] = User::where('appartment_id', $appartment->id)->get();
-    return $appartment;
-}
-
 class AppartmentController extends Controller
 {
     public function __construct()
@@ -20,7 +15,7 @@ class AppartmentController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function getAppartment(Request $request)
+    public function getAppartment()
     {
         $user = Auth::user();
         $appartment = $user->appartment;
@@ -28,8 +23,6 @@ class AppartmentController extends Controller
         if ($appartment === null) {
             abort(404);
         }
-
-        findResidents($appartment);
 
         return response()->json([
             'appartment' => $appartment
@@ -39,7 +32,10 @@ class AppartmentController extends Controller
     public function create()
     {
         $appartment = Appartment::create();
-        findResidents($appartment);
+
+        $user = Auth::user();
+        $user->appartment_id = $appartment->id;
+        $user->save();
 
         return response()->json([
             'appartment' => $appartment

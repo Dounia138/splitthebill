@@ -10,7 +10,11 @@ class Appartment extends Model
 {
     use HasFactory, HasUuids;
 
-    public function users()
+    protected $appends = [
+        'residents',
+    ];
+
+    public function residents()
     {
         return $this->hasMany(User::class);
     }
@@ -23,5 +27,10 @@ class Appartment extends Model
     public function uniqueIds()
     {
         return ['uuid'];
+    }
+
+    public function getResidentsAttribute()
+    {
+        return $this->residents()->get();
     }
 }
