@@ -30,7 +30,7 @@ const apiInstance = ofetch.create({
   },
 })
 
-export const api = async <T>(request: Parameters<typeof apiInstance>[0], schema: z.ZodSchema<T>, options?: Parameters<typeof apiInstance>[1]) => {
+export const api = async <T>(request: Parameters<typeof apiInstance>[0], schema: z.ZodSchema<T>, options?: Parameters<typeof apiInstance>[1]): Promise<T> => {
   const data = await apiInstance(request, options)
   return schema.parse(data)
 }

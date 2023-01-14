@@ -3,35 +3,42 @@ import classnames from 'classnames'
 
 import { CalendarIcon, MapPinIcon, UsersIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState } from 'react'
-import { TicketsRepo } from '$repositories/TicketsRepo'
-import { PaymentsRepo } from '$repositories/PaymentsRepo'
 import { CurrencyEuroIcon } from '@heroicons/react/24/outline'
-
-const priceBoxes = [
-  {
-    label: "Total de la colloc'",
-    price: 1083.87,
-  },
-  {
-    label: 'Ce que tu dois encore payer',
-    price: 160.43,
-  },
-  {
-    label: 'Ce que tu as déjà payé',
-    price: 110.56,
-  },
-]
+import { AppartmentRepo } from '$repositories/AppartmentRepo'
+import { User } from '$types/api/User'
 
 const Overview = () => {
-  const [tickets, setTickets] = useState<Ticket[]>([])
-  const [payments, setPayments] = useState<Payment[]>([])
+  const [residents, setResidents] = useState<User[]>([])
+
+  const tickets = residents.flatMap((resident) => resident.tickets)
+  const payments = residents.flatMap((resident) => resident.payments)
+  const owesPayments = residents.flatMap((resident) => resident.owesPayments)
+
+  // TODO: replace with the current user id
+  const userPaid = payments.reduce((acc, payment) => acc + (payment.payerId === 1 ? payment.amount : 0), 0)
+
+  const priceBoxes = [
+    {
+      label: "Total de la colloc'",
+      price: tickets.reduce((acc, ticket) => acc + ticket.amount, 0),
+    },
+    {
+      label: 'Ce que tu dois encore payer',
+      price: owesPayments.reduce(
+        // TODO: replace with the current user id
+        (acc, owesPayment) => acc + (owesPayment.payerId === 1 ? owesPayment.requestedAmount : 0),
+        0
+      ) - userPaid,
+    },
+    {
+      label: 'Ce que tu as déjà payé',
+      price: userPaid,
+    },
+  ]
 
   useEffect(() => {
-    TicketsRepo.findAppartmentTickets().then((data) => {
-      setTickets(data.tickets)
-    })
-    PaymentsRepo.findAppartmentPayments().then((data) => {
-      setPayments(data.payments)
+    AppartmentRepo.findMine().then((data) => {
+      setResidents(data.appartment.residents)
     })
   }, [])
 
@@ -95,19 +102,44 @@ const Overview = () => {
                   <div className="mt-2 sm:flex sm:justify-between">
                     <div className="sm:flex">
                       <p className="flex items-center text-sm text-gray-500">
-                        par {ticket.creator.name}
+                        par {residents.find((resident) => resident.id === ticket.creatorId)?.name}
                       </p>
                     </div>
                     <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                      <CalendarIcon
+                      <CurrencyEuroIcon
                         className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                         aria-hidden="true"
                       />
                       <p>
-                        A régler avant le{' '}
-                        <time dateTime={ticket.dueDate}>{ticket.dueDate}</time>
+                        Reste{' '}
+                        {/* {ticket.owesPayments.reduce(
+                          (acc, owesPayment) => acc + owesPayment.requestedAmount - owesPayment.payments.reduce((acc, payment) => acc + payment.amount, 0),
+                          0
+                        )}€{' '} */}
+                        {
+                          owesPayments.reduce(
+                            (acc, owesPayment) => acc + (owesPayment.forTicketId === ticket.id ? owesPayment.requestedAmount : 0),
+                            0
+                          ) - payments.reduce(
+                            (acc, payment) => acc + (owesPayments.find((owesPayment) => owesPayment.id === payment.forOwesPaymentId)?.forTicketId === ticket.id ? payment.amount : 0),
+                            0
+                          )
+                        }
                       </p>
                     </div>
+                    {ticket.expirationDate && (
+                      <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                        <CalendarIcon
+                          className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                          aria-hidden="true"
+                        />
+                        <p>
+                          A régler avant le{' '}
+                          {/* TODO: format date */}
+                          <time dateTime={ticket.expirationDate.toDateString()}>{ticket.expirationDate.toDateString()}</time>
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </a>
@@ -132,7 +164,7 @@ const Overview = () => {
                 <div className="px-4 py-4 sm:px-6">
                   <div className="flex items-center justify-between">
                     <p className="truncate text-sm font-medium text-indigo-600">
-                      Paiement de {payment.payer.name}
+                      Paiement de {residents.find((resident) => resident.id === payment.payerId)?.name}
                     </p>
                     <div className="ml-2 flex flex-shrink-0">
                       <p className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
@@ -143,17 +175,7 @@ const Overview = () => {
                   <div className="mt-2 sm:flex sm:justify-between">
                     <div className="sm:flex">
                       <p className="flex items-center text-sm text-gray-500">
-                        pour {payment.owesPayment.forTicket.name}
-                      </p>
-                    </div>
-                    <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                      <CurrencyEuroIcon
-                        className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      <p>
-                        Reste{' '}
-                        {payment.owesPayment.forTicket.amount - payment.amount}€
+                        pour {tickets.find((ticket) => ticket.id === owesPayments.find((owesPayment) => owesPayment.id === payment.forOwesPaymentId)?.forTicketId)?.name}
                       </p>
                     </div>
                   </div>
