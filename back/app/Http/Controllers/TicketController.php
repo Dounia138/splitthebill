@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OwesPayment;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,6 +45,7 @@ class TicketController extends Controller
         ]);
 
         $user = Auth::user();
+
         $ticket = Ticket::create([
             'name' => $request->name,
             'amount' => $request->amount,
@@ -51,6 +53,15 @@ class TicketController extends Controller
             'creator_id' => $user->id
         ]);
         $ticket['creator'] = $ticket->creator;
+
+        $residents = $user->appartment->residents;
+        foreach ($residents as $resident) {
+            OwesPayment::create([
+                'requested_amount' => $request->amount / count($residents),
+                'for_ticket_id' => $ticket->id,
+                'payer_id' => $resident->id
+            ]);
+        }
 
         return response()->json([
             'ticket' => $ticket
@@ -65,4 +76,3 @@ class TicketController extends Controller
         return response()->json([], 204);
     }
 }
-
