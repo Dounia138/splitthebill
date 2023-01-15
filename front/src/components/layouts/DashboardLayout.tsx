@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useState } from 'react'
+import { Fragment, ReactNode, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -12,6 +12,8 @@ import {
 } from '@heroicons/react/24/outline'
 import classnames from 'classnames'
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import { User } from '$types/api/User'
+import useUserStore from '$hooks/useUserStore'
 
 const navigation = [
   { name: 'Aperçu', href: '/', icon: HomeIcon },
@@ -25,9 +27,14 @@ const navigation = [
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const location = useLocation()
+  const me = useUserStore((state) => state.user)
+  const fetchMe = useUserStore((state) => state.fetch)
 
-  console.log(location.pathname)
+  useEffect(() => {
+    fetchMe()
+  }, [])
+
+  const location = useLocation()
 
   return (
     <>
@@ -129,7 +136,7 @@ const DashboardLayout = () => {
                         </div>
                         <div className="ml-3">
                           <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">
-                            Mate 1
+                            {me?.name}
                           </p>
                           <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
                             View profile
@@ -192,7 +199,7 @@ const DashboardLayout = () => {
                   </div>
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                      Mate 1
+                      {me?.name}
                     </p>
                     <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
                       View profile

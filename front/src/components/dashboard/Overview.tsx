@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { CurrencyEuroIcon } from '@heroicons/react/24/outline'
 import { AppartmentRepo } from '$repositories/AppartmentRepo'
 import { User } from '$types/api/User'
+import { UsersRepo } from '$repositories/UsersRepo'
 
 const Overview = () => {
   const [residents, setResidents] = useState<User[]>([])
@@ -15,7 +16,10 @@ const Overview = () => {
   const owesPayments = residents.flatMap((resident) => resident.owesPayments)
 
   // TODO: replace with the current user id
-  const userPaid = payments.reduce((acc, payment) => acc + (payment.payerId === 1 ? payment.amount : 0), 0)
+  const userPaid = payments.reduce(
+    (acc, payment) => acc + (payment.payerId === 1 ? payment.amount : 0),
+    0,
+  )
 
   const priceBoxes = [
     {
@@ -24,11 +28,13 @@ const Overview = () => {
     },
     {
       label: 'Ce que tu dois encore payer',
-      price: owesPayments.reduce(
-        // TODO: replace with the current user id
-        (acc, owesPayment) => acc + (owesPayment.payerId === 1 ? owesPayment.requestedAmount : 0),
-        0
-      ) - userPaid,
+      price:
+        owesPayments.reduce(
+          // TODO: replace with the current user id
+          (acc, owesPayment) =>
+            acc + (owesPayment.payerId === 1 ? owesPayment.requestedAmount : 0),
+          0,
+        ) - userPaid,
     },
     {
       label: 'Ce que tu as déjà payé',
@@ -37,9 +43,12 @@ const Overview = () => {
   ]
 
   useEffect(() => {
-    AppartmentRepo.findMine().then((data) => {
-      setResidents(data.appartment.residents)
-    })
+    // AppartmentRepo.findMine().then((data) => {
+    //   setResidents(data.appartment.residents)
+    // })
+    // UsersRepo.get().then((data) => {
+    //   console.log(data)
+    // })
   }, [])
 
   const createNewTicket = () => {
@@ -102,7 +111,12 @@ const Overview = () => {
                   <div className="mt-2 sm:flex sm:justify-between">
                     <div className="sm:flex">
                       <p className="flex items-center text-sm text-gray-500">
-                        par {residents.find((resident) => resident.id === ticket.creatorId)?.name}
+                        par{' '}
+                        {
+                          residents.find(
+                            (resident) => resident.id === ticket.creatorId,
+                          )?.name
+                        }
                       </p>
                     </div>
                     <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
@@ -116,15 +130,25 @@ const Overview = () => {
                           (acc, owesPayment) => acc + owesPayment.requestedAmount - owesPayment.payments.reduce((acc, payment) => acc + payment.amount, 0),
                           0
                         )}€{' '} */}
-                        {
-                          owesPayments.reduce(
-                            (acc, owesPayment) => acc + (owesPayment.forTicketId === ticket.id ? owesPayment.requestedAmount : 0),
-                            0
-                          ) - payments.reduce(
-                            (acc, payment) => acc + (owesPayments.find((owesPayment) => owesPayment.id === payment.forOwesPaymentId)?.forTicketId === ticket.id ? payment.amount : 0),
-                            0
-                          )
-                        }
+                        {owesPayments.reduce(
+                          (acc, owesPayment) =>
+                            acc +
+                            (owesPayment.forTicketId === ticket.id
+                              ? owesPayment.requestedAmount
+                              : 0),
+                          0,
+                        ) -
+                          payments.reduce(
+                            (acc, payment) =>
+                              acc +
+                              (owesPayments.find(
+                                (owesPayment) =>
+                                  owesPayment.id === payment.forOwesPaymentId,
+                              )?.forTicketId === ticket.id
+                                ? payment.amount
+                                : 0),
+                            0,
+                          )}
                       </p>
                     </div>
                     {ticket.expirationDate && (
@@ -134,9 +158,10 @@ const Overview = () => {
                           aria-hidden="true"
                         />
                         <p>
-                          A régler avant le{' '}
-                          {/* TODO: format date */}
-                          <time dateTime={ticket.expirationDate.toDateString()}>{ticket.expirationDate.toDateString()}</time>
+                          A régler avant le {/* TODO: format date */}
+                          <time dateTime={ticket.expirationDate.toDateString()}>
+                            {ticket.expirationDate.toDateString()}
+                          </time>
                         </p>
                       </div>
                     )}
@@ -164,7 +189,12 @@ const Overview = () => {
                 <div className="px-4 py-4 sm:px-6">
                   <div className="flex items-center justify-between">
                     <p className="truncate text-sm font-medium text-indigo-600">
-                      Paiement de {residents.find((resident) => resident.id === payment.payerId)?.name}
+                      Paiement de{' '}
+                      {
+                        residents.find(
+                          (resident) => resident.id === payment.payerId,
+                        )?.name
+                      }
                     </p>
                     <div className="ml-2 flex flex-shrink-0">
                       <p className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
@@ -175,7 +205,17 @@ const Overview = () => {
                   <div className="mt-2 sm:flex sm:justify-between">
                     <div className="sm:flex">
                       <p className="flex items-center text-sm text-gray-500">
-                        pour {tickets.find((ticket) => ticket.id === owesPayments.find((owesPayment) => owesPayment.id === payment.forOwesPaymentId)?.forTicketId)?.name}
+                        pour{' '}
+                        {
+                          tickets.find(
+                            (ticket) =>
+                              ticket.id ===
+                              owesPayments.find(
+                                (owesPayment) =>
+                                  owesPayment.id === payment.forOwesPaymentId,
+                              )?.forTicketId,
+                          )?.name
+                        }
                       </p>
                     </div>
                   </div>
