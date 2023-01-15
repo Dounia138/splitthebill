@@ -39,4 +39,23 @@ export class UsersRepo {
     // return await api(`/users/me`, z.any(), { method: 'DELETE' })
     throw new Error('Not implemented')
   }
+
+  static async update({
+    userId,
+    name,
+    email,
+    phoneNumber,
+    isAdmin,
+  }: {
+    userId: number
+    name?: string
+    email?: string
+    phoneNumber?: string
+    isAdmin?: boolean
+  }): Promise<{ user: User }> {
+    return await api(`/users/${userId}`, z.object({ user: User }), {
+      method: 'PATCH',
+      body: { name, email, phone_number: phoneNumber, is_admin: isAdmin },
+    })
+  }
 }

@@ -30,6 +30,7 @@ Route::get('/users/me/refresh', [AuthController::class, 'refresh']);
 
 Route::get('/users/me', [UserController::class, 'getMe']);
 Route::get('/users/{user_id}', [UserController::class, 'getById']);
+Route::patch('/users/{user_id}', [UserController::class, 'update']);
 
 Route::get('/users/me/appartment', [AppartmentController::class, 'getAppartment']);
 Route::post('/appartments', [AppartmentController::class, 'create']);
