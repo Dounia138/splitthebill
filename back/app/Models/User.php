@@ -52,6 +52,7 @@ class User extends Authenticatable implements JWTSubject
         'tickets',
         'payments',
         'owes_payments',
+        'avatar_url'
     ];
 
     /**
@@ -107,5 +108,10 @@ class User extends Authenticatable implements JWTSubject
     public function getOwesPaymentsAttribute()
     {
         return $this->owesPayments()->get();
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return 'https://source.boringavatars.com/marble/120/' . $this->id . '?colors=264653,2a9d8f,e9c46a,f4a261,e76f51';
     }
 }

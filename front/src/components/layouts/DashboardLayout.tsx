@@ -130,7 +130,7 @@ const DashboardLayout = () => {
                         <div>
                           <img
                             className="inline-block h-10 w-10 rounded-full"
-                            src={me?.avatar}
+                            src={me?.avatarUrl}
                             alt=""
                           />
                         </div>
@@ -193,7 +193,7 @@ const DashboardLayout = () => {
                   <div>
                     <img
                       className="inline-block h-9 w-9 rounded-full"
-                      src={me?.avatar}
+                      src={me?.avatarUrl}
                       alt=""
                     />
                   </div>

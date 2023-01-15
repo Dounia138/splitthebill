@@ -14,6 +14,7 @@ export const User = z.object({
   appartmentId: z.number(),
   phoneNumber: z.string(),
   isAdmin: z.boolean(),
+  avatarUrl: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
