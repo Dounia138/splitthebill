@@ -34,6 +34,11 @@ const DashboardLayout = () => {
     fetchMe()
   }, [])
 
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    window.location.reload()
+  }
+
   const location = useLocation()
 
   return (
@@ -125,7 +130,7 @@ const DashboardLayout = () => {
                     </nav>
                   </div>
                   <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
-                    <Link to="#" className="group block flex-shrink-0">
+                    <div className="block flex-shrink-0">
                       <div className="flex items-center">
                         <div>
                           <img
@@ -135,15 +140,15 @@ const DashboardLayout = () => {
                           />
                         </div>
                         <div className="ml-3">
-                          <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">
+                          <p className="text-base font-medium text-gray-800">
                             {me?.name}
                           </p>
-                          <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
-                            View profile
+                          <p className="text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer" onClick={handleLogout}>
+                            Déconnexion
                           </p>
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -188,7 +193,7 @@ const DashboardLayout = () => {
               </nav>
             </div>
             <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
-              <a href="#" className="group block w-full flex-shrink-0">
+              <div className="block w-full flex-shrink-0">
                 <div className="flex items-center">
                   <div>
                     <img
@@ -198,15 +203,15 @@ const DashboardLayout = () => {
                     />
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                    <p className="text-sm font-medium text-gray-800">
                       {me?.name}
                     </p>
-                    <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
-                      View profile
+                    <p className="text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer" onClick={handleLogout}>
+                      Déconnexion
                     </p>
                   </div>
                 </div>
-              </a>
+              </div>
             </div>
           </div>
         </div>
