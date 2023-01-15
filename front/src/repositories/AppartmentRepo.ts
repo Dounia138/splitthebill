@@ -15,7 +15,7 @@ export class AppartmentRepo {
     return await api(`/users/me/appartment?appartment_id=${appartmentId}`, z.any(), { method: 'PUT' })
   }
 
-  static async deleteMine(): Promise<void> {
-    return await api(`/users/me/appartment`, z.any(), { method: 'DELETE' })
+  static async leave(userId: number): Promise<void> {
+    return await api(`/users/${userId}/appartment`, z.any(), { method: 'DELETE' })
   }
 }

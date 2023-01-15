@@ -60,9 +60,9 @@ class AppartmentController extends Controller
         return response()->json([], 204);
     }
 
-    public function delete()
+    public function unsetAppartment(Request $request, $user_id)
     {
-        $user = Auth::user();
+        $user = User::find($user_id);
         $user->appartment_id = null;
         $user->save();
         return response()->json([], 204);

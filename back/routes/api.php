@@ -35,7 +35,7 @@ Route::patch('/users/{user_id}', [UserController::class, 'update']);
 Route::get('/users/me/appartment', [AppartmentController::class, 'getAppartment']);
 Route::post('/appartments', [AppartmentController::class, 'create']);
 Route::put('/users/me/appartment', [AppartmentController::class, 'setAppartment']);
-Route::delete('/users/me/appartment',  [AppartmentController::class, 'delete']);
+Route::delete('/users/{user_id}/appartment',  [AppartmentController::class, 'unsetAppartment']);
 
 Route::get('/users/me/appartment/tickets', [TicketController::class, 'findAppartmentTickets']);
 Route::post('/users/me/appartment/tickets', [TicketController::class, 'createTicket']);
