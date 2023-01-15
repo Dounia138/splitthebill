@@ -7,6 +7,7 @@ use App\Models\Appartment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class AppartmentController extends Controller
 {
@@ -63,6 +64,9 @@ class AppartmentController extends Controller
     public function unsetAppartment(Request $request, $user_id)
     {
         $user = User::find($user_id);
+
+        Gate::authorize('admin-or-owner', [$user, $user->appartment]);
+
         $user->appartment_id = null;
         $user->save();
         return response()->json([], 204);

@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class TicketController extends Controller
 {
@@ -71,6 +72,9 @@ class TicketController extends Controller
     public function deleteTicket(Request $request, $ticket_id)
     {
         $ticket = Ticket::find($ticket_id);
+
+        Gate::authorize('admin-or-owner', [$ticket, $ticket->creator->appartment, 'creator_id']);
+
         $ticket->delete();
 
         return response()->json([], 204);
