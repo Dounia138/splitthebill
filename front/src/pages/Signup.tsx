@@ -1,10 +1,13 @@
+import { AppartmentRepo } from "$repositories/AppartmentRepo"
 import { FormEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { UsersRepo } from "../repositories/UsersRepo"
 
-const Login = () => {
+const Signup = () => {
   const [isErrored, setIsErrored] = useState(false)
   const navigate = useNavigate();
+
+  const inviteCode = new URLSearchParams(window.location.search).get('inviteCode')
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -18,11 +21,19 @@ const Login = () => {
         email: data.get('email') as string,
         phoneNumber: data.get('phoneNumber') as string,
         password: data.get('password') as string
-      }).then(() => {
-        const queryParams = new URLSearchParams(window.location.search)
-        const redirectUrl = queryParams.get('redirectUrl') || '/'
-        navigate(redirectUrl)
       })
+        .then(() => {
+          if (inviteCode) {
+            return AppartmentRepo.join(inviteCode)
+          } else {
+            return AppartmentRepo.create().then(() => {})
+          }
+        })
+        .then(() => {
+          const queryParams = new URLSearchParams(window.location.search)
+          const redirectUrl = queryParams.get('redirectUrl') || '/'
+          navigate(redirectUrl)
+        })
     }
   };
 
@@ -102,6 +113,7 @@ const Login = () => {
                   />
                 </div>
               </div>
+
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Confirm password
@@ -117,6 +129,23 @@ const Login = () => {
                   />
                 </div>
               </div>
+
+              {inviteCode && <div>
+                <label htmlFor="appartment" className="block text-sm font-medium text-gray-700">
+                  Appartment
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="appartment"
+                    name="appartment"
+                    type="text"
+                    value={inviteCode}
+                    disabled
+                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>}
+
               <div>
                 <button
                   type="submit"
@@ -138,4 +167,4 @@ const Login = () => {
 }
 
 
-export default Login
+export default Signup

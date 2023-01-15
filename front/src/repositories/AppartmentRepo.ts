@@ -11,7 +11,11 @@ export class AppartmentRepo {
     return await api('/appartments', z.object({ appartment: Appartment }), { method: 'POST' })
   }
 
+  static async join(appartmentId: string): Promise<void> {
+    return await api(`/users/me/appartment?appartment_id=${appartmentId}`, z.any(), { method: 'PUT' })
+  }
+
   static async deleteMine(): Promise<void> {
-    return await api(`/users/me/appartment`, z.void(), { method: 'DELETE' })
+    return await api(`/users/me/appartment`, z.any(), { method: 'DELETE' })
   }
 }
