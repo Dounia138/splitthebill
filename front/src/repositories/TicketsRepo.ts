@@ -1,13 +1,30 @@
-import { Ticket } from "../types/api/Ticket"
-import { api } from "../utils/api"
-import { z } from "zod"
+import { Ticket } from '../types/api/Ticket'
+import { api } from '../utils/api'
+import { z } from 'zod'
 
 export class TicketsRepo {
-  static async create(): Promise<{ ticket: Ticket }> {
-    return await api('/users/me/appartment/tickets', z.object({ ticket: Ticket }), { method: 'POST' })
+  static async create({
+    name,
+    amount,
+    expirationDate,
+  }: {
+    name: string
+    amount: number
+    expirationDate?: Date
+  }): Promise<{ ticket: Ticket }> {
+    return await api(
+      '/users/me/appartment/tickets',
+      z.object({ ticket: Ticket }),
+      {
+        method: 'POST',
+        body: { name, amount, expiration_date: expirationDate },
+      },
+    )
   }
 
   static async delete(id: number): Promise<void> {
-    return await api(`/users/me/appartment/tickets/${id}`, z.void(), { method: 'DELETE' })
+    return await api(`/users/me/appartment/tickets/${id}`, z.void(), {
+      method: 'DELETE',
+    })
   }
 }

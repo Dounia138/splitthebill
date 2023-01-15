@@ -2,25 +2,33 @@ import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
 import classnames from 'classnames'
 
 import { CalendarIcon, MapPinIcon, UsersIcon } from '@heroicons/react/20/solid'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, FormEvent } from 'react'
 import { CurrencyEuroIcon } from '@heroicons/react/24/outline'
 import { AppartmentRepo } from '$repositories/AppartmentRepo'
 import { User } from '$types/api/User'
 import { UsersRepo } from '$repositories/UsersRepo'
+import TicketForm from './TicketForm'
+import { TicketsRepo } from '$repositories/TicketsRepo'
+import useAppartmentStore from '$hooks/useAppartmentStore'
 
 const Overview = () => {
-  const [residents, setResidents] = useState<User[]>([])
+  const [openTicketForm, setOpenTicketForm] = useState(false)
 
-  const tickets = residents.flatMap((resident) => resident.tickets)
-  const payments = residents.flatMap((resident) => resident.payments)
-  const owesPayments = residents.flatMap((resident) => resident.owesPayments)
+  const fetchAppartment = useAppartmentStore((state) => state.fetch)
+  const tickets = useAppartmentStore((state) => state.tickets())
+  const payments = useAppartmentStore((state) => state.payments())
+  const owesPayments = useAppartmentStore((state) => state.owesPayments())
+  const residents = useAppartmentStore((state) => state.mates())
 
+  //const [isError, setIsError] = useState(false)
   // TODO: replace with the current user id
   const userPaid = payments.reduce(
     (acc, payment) => acc + (payment.payerId === 1 ? payment.amount : 0),
     0,
   )
-
+  const toggleTicketForm = () => {
+    setOpenTicketForm(!openTicketForm)
+  }
   const priceBoxes = [
     {
       label: "Total de la colloc'",
@@ -43,16 +51,44 @@ const Overview = () => {
   ]
 
   useEffect(() => {
-    // AppartmentRepo.findMine().then((data) => {
-    //   setResidents(data.appartment.residents)
-    // })
-    // UsersRepo.get().then((data) => {
-    //   console.log(data)
-    // })
+    fetchAppartment()
   }, [])
 
-  const createNewTicket = () => {
-    alert('create a new ticket')
+  const createNewTicket = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const data = new FormData(event.target as HTMLFormElement)
+    if (
+      data.get('ticketName') === null ||
+      data.get('ticketName')!.length === 0 ||
+      data.get('amount') === null ||
+      data.get('amount')!.length === 0
+    ) {
+      return
+    }
+
+    const expirationDateMonth = data.get('expirationDateMonth')
+    const expirationDateDay = data.get('expirationDateDay')
+    const expirationDateYear = data.get('expirationDateYear')
+    let expirationDate = undefined
+
+    if (
+      expirationDateMonth !== null &&
+      expirationDateDay !== null &&
+      expirationDateYear !== null
+    ) {
+      expirationDate = new Date(
+        `${expirationDateMonth}/${expirationDateDay}/${expirationDateYear}`,
+      )
+    }
+
+    TicketsRepo.create({
+      name: data.get('ticketName') as string,
+      amount: parseFloat(data.get('amount') as string),
+      expirationDate,
+    }).then(() => {
+      fetchAppartment()
+    })
+    setOpenTicketForm(!openTicketForm)
   }
 
   return (
@@ -86,7 +122,7 @@ const Overview = () => {
               <button
                 type="button"
                 className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={createNewTicket}
+                onClick={toggleTicketForm}
               >
                 Créer un nouveau ticket
               </button>
@@ -119,52 +155,53 @@ const Overview = () => {
                         }
                       </p>
                     </div>
-                    <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                      <CurrencyEuroIcon
-                        className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      <p>
-                        Reste{' '}
-                        {/* {ticket.owesPayments.reduce(
-                          (acc, owesPayment) => acc + owesPayment.requestedAmount - owesPayment.payments.reduce((acc, payment) => acc + payment.amount, 0),
-                          0
-                        )}€{' '} */}
-                        {owesPayments.reduce(
-                          (acc, owesPayment) =>
-                            acc +
-                            (owesPayment.forTicketId === ticket.id
-                              ? owesPayment.requestedAmount
-                              : 0),
-                          0,
-                        ) -
-                          payments.reduce(
-                            (acc, payment) =>
-                              acc +
-                              (owesPayments.find(
-                                (owesPayment) =>
-                                  owesPayment.id === payment.forOwesPaymentId,
-                              )?.forTicketId === ticket.id
-                                ? payment.amount
-                                : 0),
-                            0,
-                          )}
-                      </p>
-                    </div>
-                    {ticket.expirationDate && (
+                    <div className="flex gap-4">
+                      {ticket.expirationDate && (
+                        <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                          <CalendarIcon
+                            className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                            aria-hidden="true"
+                          />
+                          <p>
+                            A régler avant le {/* TODO: format date */}
+                            <time
+                              dateTime={ticket.expirationDate.toDateString()}
+                            >
+                              {ticket.expirationDate.toLocaleDateString('fr')}
+                            </time>
+                          </p>
+                        </div>
+                      )}
                       <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                        <CalendarIcon
+                        <CurrencyEuroIcon
                           className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                           aria-hidden="true"
                         />
                         <p>
-                          A régler avant le {/* TODO: format date */}
-                          <time dateTime={ticket.expirationDate.toDateString()}>
-                            {ticket.expirationDate.toDateString()}
-                          </time>
+                          Reste{' '}
+                          {owesPayments.reduce(
+                            (acc, owesPayment) =>
+                              acc +
+                              (owesPayment.forTicketId === ticket.id
+                                ? owesPayment.requestedAmount
+                                : 0),
+                            0,
+                          ) -
+                            payments.reduce(
+                              (acc, payment) =>
+                                acc +
+                                (owesPayments.find(
+                                  (owesPayment) =>
+                                    owesPayment.id === payment.forOwesPaymentId,
+                                )?.forTicketId === ticket.id
+                                  ? payment.amount
+                                  : 0),
+                              0,
+                            )}
+                          €{' '}
                         </p>
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               </a>
@@ -225,6 +262,12 @@ const Overview = () => {
           ))}
         </ul>
       </div>
+      {openTicketForm && (
+        <TicketForm
+          handleClose={toggleTicketForm}
+          createNewTicket={createNewTicket}
+        />
+      )}
     </div>
   )
 }
