@@ -1,41 +1,10 @@
 import useAppartmentStore from '$hooks/useAppartmentStore'
-import { AppartmentRepo } from '$repositories/AppartmentRepo'
-import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/20/solid'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { UsersRepo } from '$repositories/UsersRepo'
 import { User } from '$types/api/User'
-
-const people = [
-  {
-    name: 'Jane Cooper',
-    title: 'Paradigm Representative',
-    role: 'Admin',
-    email: 'janecooper@example.com',
-    telephone: '+1-202-555-0170',
-    imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-  {
-    name: 'Jane Cooper',
-    title: 'Paradigm Representative',
-    role: 'Admin',
-    email: 'janecooper@example.com',
-    telephone: '+1-202-555-0170',
-    imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-  {
-    name: 'Jane Cooper',
-    title: 'Paradigm Representative',
-    role: 'Admin',
-    email: 'janecooper@example.com',
-    telephone: '+1-202-555-0170',
-    imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-]
+import { UserPlusIcon } from '@heroicons/react/20/solid'
 
 type ThreeDotsMenuProps = {
   mate: User
@@ -92,6 +61,16 @@ const Mates = () => {
   const appartment = useAppartmentStore((state) => state.appartment)
   const mates = useAppartmentStore((state) => state.mates())
   const fetchAppartment = useAppartmentStore((state) => state.fetch)
+  const inviteLink = `${location.origin}/inscription/?inviteCode=${appartment?.uuid}`
+  const [copyButtonText, setCopyButtonText] = useState('Copier le lien')
+
+  const copyInviteLink = () => {
+    navigator.clipboard.writeText(inviteLink)
+    setCopyButtonText('Lien copié !')
+    setTimeout(() => {
+      setCopyButtonText('Copier le lien')
+    }, 2000)
+  }
 
   useEffect(() => {
     fetchAppartment()
@@ -123,11 +102,10 @@ const Mates = () => {
               <dt className="sr-only">Role</dt>
               <dd className="mt-3">
                 <span
-                  className={`${
-                    mate.isAdmin
-                      ? 'bg-orange-100 text-orange-800'
-                      : 'bg-indigo-100 text-indigo-800'
-                  } rounded-full px-2 py-1 text-xs font-medium`}
+                  className={`${mate.isAdmin
+                    ? 'bg-orange-100 text-orange-800'
+                    : 'bg-indigo-100 text-indigo-800'
+                    } rounded-full px-2 py-1 text-xs font-medium`}
                 >
                   {mate.isAdmin ? 'Admin' : 'Membre'}
                 </span>
@@ -156,6 +134,41 @@ const Mates = () => {
           </div>
         </li>
       ))}
+      <li
+        className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow"
+      >
+        <div className="flex justify-center items-center flex-1 flex-col p-8 relative">
+          <UserPlusIcon
+            className="h-24 w-24 text-indigo-600"
+            aria-hidden="true"
+          />
+          <div className="mt-6 mb-3">
+            <p className="text-sm text-gray-500">Invitez votre nouveau colloc en lui envoyant ce lien !</p>
+          </div>
+          <input
+            id="invitation"
+            name="invitation"
+            type="text"
+            autoComplete="invitation"
+            readOnly
+            value={inviteLink}
+            onClick={(e) => { copyInviteLink(); e.currentTarget.select() }}
+            className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+          />
+        </div>
+        <div>
+          <div className="-mt-px flex divide-x divide-gray-200">
+            <div className="-ml-px flex w-0 flex-1">
+              <p
+                className="relative cursor-pointer inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
+                onClick={copyInviteLink}
+              >
+                {copyButtonText}
+              </p>
+            </div>
+          </div>
+        </div>
+      </li>
     </ul>
   )
 }
