@@ -49,7 +49,7 @@ const Signup = () => {
             alt="Your Company"
           />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Sign in to your account
+            Créer un compte
           </h2>
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -60,7 +60,7 @@ const Signup = () => {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Name
+                  Nom
                 </label>
                 <div className="mt-1">
                   <input
@@ -78,7 +78,7 @@ const Signup = () => {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email address
+                  Email
                 </label>
                 <div className="mt-1">
                   <input
@@ -97,13 +97,16 @@ const Signup = () => {
                   htmlFor="phoneNumber"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Phone Number
+                  Numéro de téléphone
                 </label>
                 <div className="mt-1">
                   <input
                     id="phoneNumber"
                     name="phoneNumber"
                     type="text"
+                    placeholder="+33612345678"
+                    minLength={12}
+                    maxLength={12}
                     autoComplete="text"
                     required
                     className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
@@ -116,7 +119,7 @@ const Signup = () => {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Password
+                  Mot de passe
                 </label>
                 <div className="mt-1">
                   <input
@@ -135,7 +138,7 @@ const Signup = () => {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Confirm password
+                  Confirmer le mot de passe
                 </label>
                 <div className="mt-1">
                   <input
@@ -155,7 +158,7 @@ const Signup = () => {
                     htmlFor="appartment"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Appartment
+                    Code d'invitation
                   </label>
                   <div className="mt-1">
                     <input
@@ -175,7 +178,7 @@ const Signup = () => {
                   type="submit"
                   className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                  Sign up
+                  Créer un compte
                 </button>
                 {isErrored && (
                   <p className="text-sm font-light text-red-500 dark:text-red-400 mt-4">
@@ -184,12 +187,12 @@ const Signup = () => {
                 )}
               </div>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400 mt-4">
-                Already have an account ?{' '}
+                Vous avez déjà un compte ?{' '}
                 <a
                   href="/connexion"
                   className="font-medium ml-1 text-indigo-600 hover:underline dark:text-primary-500"
                 >
-                  Sign in
+                  Se connecter
                 </a>
               </p>
             </form>
