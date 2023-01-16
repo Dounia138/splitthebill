@@ -9,4 +9,4 @@ services:
     volumes:
       - ./src:/app/src
     ports:
-      - 8080:5173
+      - 8080:4173

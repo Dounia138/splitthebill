@@ -1,4 +1,4 @@
-import { useAppartmentStore } from '$hooks/useAppartmentStore'
+import { useAppartmentStore } from '@/hooks/useAppartmentStore'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -45,15 +45,22 @@ const Chart = () => {
     .reverse()
 
   const data = {
-    labels: lastSixMonths.map((date) => date.toLocaleString('fr-FR', { month: 'long' }).split(', ')[0]),
+    labels: lastSixMonths.map(
+      (date) => date.toLocaleString('fr-FR', { month: 'long' }).split(', ')[0],
+    ),
     datasets: [
       {
         label: "Dépenses de la colloc'",
         data: lastSixMonths.map((date) =>
-          tickets.filter((ticket) => {
-            const ticketDate = new Date(ticket.createdAt)
-            return ticketDate.getMonth() === date.getMonth() && ticketDate.getFullYear() === date.getFullYear()
-          }).reduce((acc, ticket) => acc + ticket.amount, 0),
+          tickets
+            .filter((ticket) => {
+              const ticketDate = new Date(ticket.createdAt)
+              return (
+                ticketDate.getMonth() === date.getMonth() &&
+                ticketDate.getFullYear() === date.getFullYear()
+              )
+            })
+            .reduce((acc, ticket) => acc + ticket.amount, 0),
         ),
         borderColor: 'rgb(88 80 236)',
       },

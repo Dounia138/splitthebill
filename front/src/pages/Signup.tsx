@@ -1,16 +1,18 @@
-import { AppartmentRepo } from "$repositories/AppartmentRepo"
-import { FormEvent, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { UsersRepo } from "../repositories/UsersRepo"
+import { AppartmentRepo } from '@/repositories/AppartmentRepo'
+import { FormEvent, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { UsersRepo } from '../repositories/UsersRepo'
 
 const Signup = () => {
   const [isErrored, setIsErrored] = useState(false)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const inviteCode = new URLSearchParams(window.location.search).get('inviteCode')
+  const inviteCode = new URLSearchParams(window.location.search).get(
+    'inviteCode',
+  )
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
     const data = new FormData(event.target as HTMLFormElement)
     console.log(data.get('password'), data.get('confirmPassword'))
     if (data.get('password') !== data.get('confirmPassword')) {
@@ -20,7 +22,7 @@ const Signup = () => {
         name: data.get('name') as string,
         email: data.get('email') as string,
         phoneNumber: data.get('phoneNumber') as string,
-        password: data.get('password') as string
+        password: data.get('password') as string,
       })
         .then(() => {
           if (inviteCode) {
@@ -35,7 +37,7 @@ const Signup = () => {
           navigate(redirectUrl)
         })
     }
-  };
+  }
 
   return (
     <>
@@ -46,13 +48,18 @@ const Signup = () => {
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
           />
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+            Sign in to your account
+          </h2>
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form className="space-y-6" method="POST" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Name
                 </label>
                 <div className="mt-1">
@@ -67,7 +74,10 @@ const Signup = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Email address
                 </label>
                 <div className="mt-1">
@@ -83,7 +93,10 @@ const Signup = () => {
               </div>
 
               <div>
-                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="phoneNumber"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Phone Number
                 </label>
                 <div className="mt-1">
@@ -99,7 +112,10 @@ const Signup = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
                 <div className="mt-1">
@@ -115,7 +131,10 @@ const Signup = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Confirm password
                 </label>
                 <div className="mt-1">
@@ -130,21 +149,26 @@ const Signup = () => {
                 </div>
               </div>
 
-              {inviteCode && <div>
-                <label htmlFor="appartment" className="block text-sm font-medium text-gray-700">
-                  Appartment
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="appartment"
-                    name="appartment"
-                    type="text"
-                    value={inviteCode}
-                    disabled
-                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  />
+              {inviteCode && (
+                <div>
+                  <label
+                    htmlFor="appartment"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Appartment
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="appartment"
+                      name="appartment"
+                      type="text"
+                      value={inviteCode}
+                      disabled
+                      className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    />
+                  </div>
                 </div>
-              </div>}
+              )}
 
               <div>
                 <button
@@ -153,10 +177,20 @@ const Signup = () => {
                 >
                   Sign up
                 </button>
-                {isErrored && <p className="text-sm font-light text-red-500 dark:text-red-400 mt-4">Passwords do not match</p>}
+                {isErrored && (
+                  <p className="text-sm font-light text-red-500 dark:text-red-400 mt-4">
+                    Passwords do not match
+                  </p>
+                )}
               </div>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400 mt-4">
-                Already have an account ? <a href="/connexion" className="font-medium ml-1 text-indigo-600 hover:underline dark:text-primary-500">Sign in</a>
+                Already have an account ?{' '}
+                <a
+                  href="/connexion"
+                  className="font-medium ml-1 text-indigo-600 hover:underline dark:text-primary-500"
+                >
+                  Sign in
+                </a>
               </p>
             </form>
           </div>
@@ -165,6 +199,5 @@ const Signup = () => {
     </>
   )
 }
-
 
 export default Signup

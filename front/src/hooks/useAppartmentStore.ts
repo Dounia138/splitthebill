@@ -1,10 +1,10 @@
-import { AppartmentRepo } from '$repositories/AppartmentRepo'
-import { UsersRepo } from '$repositories/UsersRepo'
-import { Appartment } from '$types/api/Appartment'
-import { OwesPayment } from '$types/api/OwesPayment'
-import { Payment } from '$types/api/Payment'
-import { Ticket } from '$types/api/Ticket'
-import { User } from '$types/api/User'
+import { AppartmentRepo } from '@/repositories/AppartmentRepo'
+import { UsersRepo } from '@/repositories/UsersRepo'
+import { Appartment } from '@/types/api/Appartment'
+import { OwesPayment } from '@/types/api/OwesPayment'
+import { Payment } from '@/types/api/Payment'
+import { Ticket } from '@/types/api/Ticket'
+import { User } from '@/types/api/User'
 import { create } from 'zustand'
 
 interface AppartmentStore {
