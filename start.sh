@@ -15,7 +15,8 @@ docker run --rm -v $(pwd):/app -w /app composer:latest \
 docker run --rm -v $(pwd):/app -w /app node:16-alpine \
   npm install
 docker run --rm -v $(pwd):/app -w /app php:8.1-cli-alpine \
-  php artisan key:generate
+  php artisan key:generate && \
+  php artisan jwt:secret -f
 cd ..
 
 # Start back (Laravel + MariaDB) and front containers
