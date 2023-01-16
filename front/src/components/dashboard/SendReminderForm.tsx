@@ -1,9 +1,9 @@
-import { useAppartmentStore, useUserStore } from '$hooks/index'
+import { useAppartmentStore, useUserStore } from '@/hooks/index'
 import { CalendarIcon } from '@heroicons/react/20/solid'
 import { CurrencyEuroIcon } from '@heroicons/react/24/outline'
-import { UsersRepo } from '$repositories/UsersRepo'
+import { UsersRepo } from '@/repositories/UsersRepo'
 import { useState, useEffect } from 'react'
-import { User } from '$types/api/User'
+import { User } from '@/types/api/User'
 
 function SendReminderForm({
   userId,

@@ -12,8 +12,8 @@ import {
 } from '@heroicons/react/24/outline'
 import classnames from 'classnames'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { User } from '$types/api/User'
-import { useAppartmentStore, useUserStore } from '$hooks/index'
+import { User } from '@/types/api/User'
+import { useAppartmentStore, useUserStore } from '@/hooks/index'
 
 const navigation = [
   { name: 'Aperçu', href: '/', icon: HomeIcon },

@@ -1,5 +1,5 @@
-import { useAppartmentStore } from '$hooks/index'
-import { TicketsRepo } from '$repositories/TicketsRepo'
+import { useAppartmentStore } from '@/hooks/index'
+import { TicketsRepo } from '@/repositories/TicketsRepo'
 import { useState, FormEvent } from 'react'
 
 const getMaxDay = (month: number, year: number) => {

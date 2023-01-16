@@ -1,13 +1,13 @@
-import { useAppartmentStore, useUserStore } from '$hooks/index'
+import { useAppartmentStore, useUserStore } from '@/hooks/index'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { UsersRepo } from '$repositories/UsersRepo'
-import { User } from '$types/api/User'
+import { UsersRepo } from '@/repositories/UsersRepo'
+import { User } from '@/types/api/User'
 import { UserPlusIcon } from '@heroicons/react/20/solid'
-import SendReminderForm from '$components/dashboard/SendReminderForm'
-import { Appartment } from '$types/api/Appartment'
-import { AppartmentRepo } from '$repositories/AppartmentRepo'
+import SendReminderForm from '@/components/dashboard/SendReminderForm'
+import { Appartment } from '@/types/api/Appartment'
+import { AppartmentRepo } from '@/repositories/AppartmentRepo'
 
 type ThreeDotsMenuProps = {
   mate: User

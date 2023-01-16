@@ -1,23 +1,26 @@
-import { FormEvent, useState } from "react"
-import { useNavigate } from "react-router-dom";
-import { UsersRepo } from "../repositories/UsersRepo"
+import { FormEvent, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { UsersRepo } from '../repositories/UsersRepo'
 interface LoginCredentials {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 const Login = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.target as HTMLFormElement);
-    UsersRepo.login(data.get('email') as string, data.get('password') as string).then(() => {
+    event.preventDefault()
+    const data = new FormData(event.target as HTMLFormElement)
+    UsersRepo.login(
+      data.get('email') as string,
+      data.get('password') as string,
+    ).then(() => {
       const queryParams = new URLSearchParams(window.location.search)
       const redirectUrl = queryParams.get('redirectUrl') || '/'
       navigate(redirectUrl)
     })
-  };
+  }
 
   return (
     <>
@@ -28,13 +31,18 @@ const Login = () => {
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
           />
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+            Sign in to your account
+          </h2>
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form className="space-y-6" method="POST" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Email address
                 </label>
                 <div className="mt-1">
@@ -49,7 +57,10 @@ const Login = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
                 <div className="mt-1">
@@ -71,7 +82,13 @@ const Login = () => {
                   Sign in
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400 mt-4">
-                  Don’t have an account yet ? <a href="/inscription" className="font-medium ml-1 text-indigo-600 hover:underline dark:text-primary-500">Sign up</a>
+                  Don’t have an account yet ?{' '}
+                  <a
+                    href="/inscription"
+                    className="font-medium ml-1 text-indigo-600 hover:underline dark:text-primary-500"
+                  >
+                    Sign up
+                  </a>
                 </p>
               </div>
             </form>
@@ -81,6 +98,5 @@ const Login = () => {
     </>
   )
 }
-
 
 export default Login

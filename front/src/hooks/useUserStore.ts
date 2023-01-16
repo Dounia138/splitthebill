@@ -1,5 +1,5 @@
-import { UsersRepo } from '$repositories/UsersRepo'
-import { User } from '$types/api/User'
+import { UsersRepo } from '@/repositories/UsersRepo'
+import { User } from '@/types/api/User'
 import { create } from 'zustand'
 
 interface UserStore {

@@ -3,9 +3,9 @@ import { CurrencyEuroIcon } from '@heroicons/react/24/outline'
 import Chart from './Chart'
 import { useEffect, useState, FormEvent } from 'react'
 
-import { PaymentsRepo, TicketsRepo } from '$repositories/index'
-import { Ticket, Payment, OwesPayment } from '$types/api'
-import { useAppartmentStore, useUserStore } from '$hooks/index'
+import { PaymentsRepo, TicketsRepo } from '@/repositories/index'
+import { Ticket, Payment, OwesPayment } from '@/types/api'
+import { useAppartmentStore, useUserStore } from '@/hooks/index'
 
 import TicketForm from './TicketForm'
 
@@ -140,7 +140,9 @@ const Overview = () => {
                         >
                           Payer{' '}
                           {ticket.owesPayments
-                            .find((owesPayment) => owesPayment.payerId === me?.id)
+                            .find(
+                              (owesPayment) => owesPayment.payerId === me?.id,
+                            )
                             ?.requestedAmount.toFixed(2)}
                           €
                         </button>
@@ -187,7 +189,9 @@ const Overview = () => {
                                 <time
                                   dateTime={ticket.expirationDate.toDateString()}
                                 >
-                                  {ticket.expirationDate.toLocaleDateString('fr')}
+                                  {ticket.expirationDate.toLocaleDateString(
+                                    'fr',
+                                  )}
                                 </time>
                               </p>
                             </div>
@@ -271,7 +275,8 @@ const Overview = () => {
                                   ticket.id ===
                                   owesPayments.find(
                                     (owesPayment) =>
-                                      owesPayment.id === payment.forOwesPaymentId,
+                                      owesPayment.id ===
+                                      payment.forOwesPaymentId,
                                   )?.forTicketId,
                               )?.name
                             }
