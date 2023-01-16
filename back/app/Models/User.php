@@ -22,6 +22,7 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'phone_number',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -34,20 +35,26 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
-    public function appartment()
-    {
-        return $this->belongsTo(Appartment::class, 'appartment_id', 'id');
-    }
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<int, string>
+     */
+    protected $casts = [
+        'is_admin' => 'boolean',
+    ];
 
-    public function tickets()
-    {
-        return $this->hasMany(Ticket::class, 'creator_id', 'id');
-    }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class, 'payer_id', 'id');
-    }
+    /**
+     * The attributes that should be appended.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'tickets',
+        'payments',
+        'owes_payments',
+        'avatar_url'
+    ];
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -67,5 +74,45 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function appartment()
+    {
+        return $this->belongsTo(Appartment::class, 'appartment_id', 'id');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'creator_id', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'payer_id', 'id');
+    }
+
+    public function owesPayments()
+    {
+        return $this->hasMany(OwesPayment::class, 'payer_id', 'id');
+    }
+
+    public function getTicketsAttribute()
+    {
+        return $this->tickets()->get();
+    }
+
+    public function getPaymentsAttribute()
+    {
+        return $this->payments()->get();
+    }
+
+    public function getOwesPaymentsAttribute()
+    {
+        return $this->owesPayments()->get();
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return 'https://source.boringavatars.com/marble/120/' . $this->id . '?colors=264653,2a9d8f,e9c46a,f4a261,e76f51';
     }
 }

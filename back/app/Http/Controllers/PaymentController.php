@@ -24,12 +24,6 @@ class PaymentController extends Controller
         $all_payments = [];
         foreach ($residents as $resident) {
             $resident_payments = Payment::where('payer_id', $resident->id)->get();
-            foreach ($resident_payments as $payment) {
-                $payment['payer'] = $payment->payer;
-                $payment->owesPayment;
-                $payment->owesPayment->ticket;
-                $payment->owesPayment->ticket->creator;
-            }
             $all_payments = array_merge($all_payments, $resident_payments->toArray());
         }
 
@@ -52,11 +46,6 @@ class PaymentController extends Controller
             'for_owes_payment_id' => $request->owes_payment_id,
             'appartment_id' => $user->appartment->id
         ]);
-
-        $payment['payer'] = $payment->payer;
-        $payment->owesPayment;
-        $payment->owesPayment->ticket;
-        $payment->owesPayment->ticket->creator;
 
         return response()->json([
             'payment' => $payment

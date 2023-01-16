@@ -1,45 +1,30 @@
-export class TicketsRepo {
-  static async findAppartmentTickets(): Promise<{ tickets: Ticket[] }> {
-    // GET /users/me/appartment/tickets
-    return {
-      tickets: [
-        {
-          id: 1,
-          name: 'Ticket 1',
-          amount: 400,
-          dueDate: '12/12/23',
-          creator: {
-            id: 1,
-            name: 'Me',
-            isAdmin: true,
-            paidAmount: 0,
-            owesAmount: 0,
-          },
-        },
-      ],
-    }
-  }
+import { Ticket } from '../types/api/Ticket'
+import { api } from '../utils/api'
+import { z } from 'zod'
 
-  static async create(): Promise<{ ticket: Ticket }> {
-    // POST /users/me/appartment/tickets
-    return {
-      ticket: {
-        id: 1,
-        name: 'Ticket 1',
-        amount: 400,
-        dueDate: '12/12/23',
-        creator: {
-          id: 1,
-          name: 'Me',
-          isAdmin: true,
-          paidAmount: 0,
-          owesAmount: 0,
-        },
+export class TicketsRepo {
+  static async create({
+    name,
+    amount,
+    expirationDate,
+  }: {
+    name: string
+    amount: number
+    expirationDate?: Date
+  }): Promise<{ ticket: Ticket }> {
+    return await api(
+      '/users/me/appartment/tickets',
+      z.object({ ticket: Ticket }),
+      {
+        method: 'POST',
+        body: { name, amount, expiration_date: expirationDate },
       },
-    }
+    )
   }
 
   static async delete(id: number): Promise<void> {
-    // DELETE /users/me/appartment/tickets/:id
+    return await api(`/users/me/appartment/tickets/${id}`, z.any(), {
+      method: 'DELETE',
+    })
   }
 }

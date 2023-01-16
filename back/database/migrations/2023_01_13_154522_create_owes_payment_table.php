@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->float('requested_amount');
             $table->unsignedBigInteger('for_ticket_id');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('owes_payment');
+        Schema::dropIfExists('owes_payments');
     }
 };

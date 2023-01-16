@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -14,20 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dateTime('expiration_date')->nullable();
+        Schema::table('owes_payments', function (Blueprint $table) {
+            $table->unsignedBigInteger('payer_id');
         });
     }
 
     /**
-     * Reverse the migrations
+     * Reverse the migrations.
      *
      * @return void
      */
     public function down()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('expiration_date');
+        Schema::table('owes_payments', function (Blueprint $table) {
+            $table->dropColumn('payer_id');
         });
     }
 };

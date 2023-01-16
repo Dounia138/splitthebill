@@ -1,4 +1,42 @@
-const Login = () => {
+import { AppartmentRepo } from "$repositories/AppartmentRepo"
+import { FormEvent, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { UsersRepo } from "../repositories/UsersRepo"
+
+const Signup = () => {
+  const [isErrored, setIsErrored] = useState(false)
+  const navigate = useNavigate();
+
+  const inviteCode = new URLSearchParams(window.location.search).get('inviteCode')
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.target as HTMLFormElement)
+    console.log(data.get('password'), data.get('confirmPassword'))
+    if (data.get('password') !== data.get('confirmPassword')) {
+      setIsErrored(true)
+    } else {
+      UsersRepo.create({
+        name: data.get('name') as string,
+        email: data.get('email') as string,
+        phoneNumber: data.get('phoneNumber') as string,
+        password: data.get('password') as string
+      })
+        .then(() => {
+          if (inviteCode) {
+            return AppartmentRepo.join(inviteCode)
+          } else {
+            return AppartmentRepo.create().then(() => {})
+          }
+        })
+        .then(() => {
+          const queryParams = new URLSearchParams(window.location.search)
+          const redirectUrl = queryParams.get('redirectUrl') || '/'
+          navigate(redirectUrl)
+        })
+    }
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -12,8 +50,8 @@ const Login = () => {
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" action="#" method="POST">
-            <div>
+            <form className="space-y-6" method="POST" onSubmit={handleSubmit}>
+              <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Name
                 </label>
@@ -45,6 +83,22 @@ const Login = () => {
               </div>
 
               <div>
+                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
+                  Phone Number
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    type="text"
+                    autoComplete="text"
+                    required
+                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
@@ -59,6 +113,7 @@ const Login = () => {
                   />
                 </div>
               </div>
+
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Confirm password
@@ -66,7 +121,7 @@ const Login = () => {
                 <div className="mt-1">
                   <input
                     id="password"
-                    name="password"
+                    name="confirmPassword"
                     type="password"
                     autoComplete="current-password"
                     required
@@ -74,6 +129,23 @@ const Login = () => {
                   />
                 </div>
               </div>
+
+              {inviteCode && <div>
+                <label htmlFor="appartment" className="block text-sm font-medium text-gray-700">
+                  Appartment
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="appartment"
+                    name="appartment"
+                    type="text"
+                    value={inviteCode}
+                    disabled
+                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>}
+
               <div>
                 <button
                   type="submit"
@@ -81,8 +153,9 @@ const Login = () => {
                 >
                   Sign up
                 </button>
+                {isErrored && <p className="text-sm font-light text-red-500 dark:text-red-400 mt-4">Passwords do not match</p>}
               </div>
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400 mt-4"> 
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400 mt-4">
                 Already have an account ? <a href="/connexion" className="font-medium ml-1 text-indigo-600 hover:underline dark:text-primary-500">Sign in</a>
               </p>
             </form>
@@ -94,4 +167,4 @@ const Login = () => {
 }
 
 
-export default Login
+export default Signup
