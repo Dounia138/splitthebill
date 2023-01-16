@@ -36,6 +36,7 @@ class AppartmentController extends Controller
 
         $user = Auth::user();
         $user->appartment_id = $appartment->id;
+        $user->is_admin = true;
         $user->save();
 
         return response()->json([
