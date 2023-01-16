@@ -31,16 +31,18 @@ export const useAppartmentStore = create<AppartmentStore>((set, get) => ({
   tickets: () =>
     get()
       .mates()
-      .flatMap((mate) => mate.tickets) ?? [],
+      .flatMap((mate) => mate.tickets)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
   payments: () =>
     get()
       .mates()
-      .flatMap((mate) => mate.payments) ?? [],
+      .flatMap((mate) => mate.payments)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
   owesPayments: () =>
     get()
       .mates()
-      .flatMap((mate) => mate.owesPayments) ?? [],
-
+      .flatMap((mate) => mate.owesPayments)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
   ticketsWithRelation: () =>
     relateTickets(get().tickets(), get().payments(), get().owesPayments()),
   uncompletedTickets: () => getUncompletedTickets(get().ticketsWithRelation()),
