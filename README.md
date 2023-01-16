@@ -9,12 +9,16 @@ The project is available [here](https://github.com/users/bdauphouy/projects/2).
 
 ## Getting Started
 
-1. Clone the repo
-2. Copy `.env.example` to `.env`
+1. Clone the repo 
+2. Copy `./back/.env.example` to `./back/.env`
 3. Run command: `make start`
 
 - The Laravel API should be running on [`http://localhost:80`](http://localhost:80)
 - The React app should be running on [`http://localhost:8080`](http://localhost:8080)
+
+## Known issues
+
+If you have an issue `php file at <path> could not be parsed as PHP, it may be binary or corrupted`, remove `./back/vendor` as well as `./back/composer.lock`.
 
 ## Team
 
