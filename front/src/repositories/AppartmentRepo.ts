@@ -1,42 +1,21 @@
+import { Appartment } from "../types/api/Appartment"
+import { api } from "../utils/api"
+import { z } from "zod"
+
 export class AppartmentRepo {
   static async findMine(): Promise<{ appartment: Appartment }> {
-    // GET /users/me/appartment
-    return {
-      appartment: {
-        id: 1,
-        uuid: 'this-is-a-uuid',
-        residents: [
-          {
-            id: 2,
-            name: 'Mate 1',
-            isAdmin: false,
-            paidAmount: 0,
-            owesAmount: 0,
-          },
-          {
-            id: 3,
-            name: 'Mate 2',
-            isAdmin: true,
-            paidAmount: 0,
-            owesAmount: 0,
-          },
-        ],
-      },
-    }
+    return await api('/users/me/appartment', z.object({ appartment: Appartment }))
   }
 
   static async create(): Promise<{ appartment: Appartment }> {
-    // POST /appartments
-    return {
-      appartment: {
-        id: 1,
-        uuid: 'this-is-a-uuid',
-        residents: [],
-      },
-    }
+    return await api('/appartments', z.object({ appartment: Appartment }), { method: 'POST' })
   }
 
-  static async delete(id: number): Promise<void> {
-    // DELETE /users/me/appartment
+  static async join(appartmentId: string): Promise<void> {
+    return await api(`/users/me/appartment?appartment_id=${appartmentId}`, z.any(), { method: 'PUT' })
+  }
+
+  static async leave(userId: number): Promise<void> {
+    return await api(`/users/${userId}/appartment`, z.any(), { method: 'DELETE' })
   }
 }

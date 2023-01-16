@@ -15,6 +15,7 @@ class Ticket extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'name',
         'amount',
         'creator_id',
         'expiration_date',
@@ -25,8 +26,8 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'creator_id');
     }
 
-    public function owesPayment()
+    public function owesPayments()
     {
-        return $this->hasMany(Ticket::class, 'for_ticket_id', 'id');
+        return $this->hasMany(OwesPayment::class, 'for_ticket_id');
     }
 }

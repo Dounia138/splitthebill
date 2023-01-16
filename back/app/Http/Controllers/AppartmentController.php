@@ -7,11 +7,7 @@ use App\Models\Appartment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
-function findResidents(Appartment $appartment) {
-    $appartment['residents'] = User::where('appartment_id', $appartment->id)->get();
-    return $appartment;
-}
+use Illuminate\Support\Facades\Gate;
 
 class AppartmentController extends Controller
 {
@@ -20,7 +16,7 @@ class AppartmentController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function getAppartment(Request $request)
+    public function getAppartment()
     {
         $user = Auth::user();
         $appartment = $user->appartment;
@@ -28,8 +24,6 @@ class AppartmentController extends Controller
         if ($appartment === null) {
             abort(404);
         }
-
-        findResidents($appartment);
 
         return response()->json([
             'appartment' => $appartment
@@ -39,7 +33,11 @@ class AppartmentController extends Controller
     public function create()
     {
         $appartment = Appartment::create();
-        findResidents($appartment);
+
+        $user = Auth::user();
+        $user->appartment_id = $appartment->id;
+        $user->is_admin = true;
+        $user->save();
 
         return response()->json([
             'appartment' => $appartment
@@ -64,9 +62,12 @@ class AppartmentController extends Controller
         return response()->json([], 204);
     }
 
-    public function delete()
+    public function unsetAppartment(Request $request, $user_id)
     {
-        $user = Auth::user();
+        $user = User::find($user_id);
+
+        Gate::authorize('admin-or-owner', [$user, $user->appartment]);
+
         $user->appartment_id = null;
         $user->save();
         return response()->json([], 204);

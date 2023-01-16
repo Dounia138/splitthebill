@@ -11,7 +11,8 @@ export default defineConfig({
       $pages: path.resolve(__dirname, './src/pages'),
       $repositories: path.resolve(__dirname, './src/repositories'),
       $lib: path.resolve(__dirname, './src/lib'),
-      $types: path.resolve(__dirname, './src/lib/types.d.ts'),
+      $types: path.resolve(__dirname, './src/types'),
+      $hooks: path.resolve(__dirname, './src/hooks'),
     },
   },
 })

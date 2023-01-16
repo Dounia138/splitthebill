@@ -16,7 +16,8 @@ class OwesPaymentSeeder extends Seeder
     {
         DB::table('owes_payments')->insert([
             'requested_amount' => 100,
-            'for_ticket_id' => 1
+            'for_ticket_id' => 1,
+            'payer_id' => 1,
         ]);
     }
 }
