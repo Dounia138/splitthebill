@@ -7,9 +7,7 @@ interface UserStore {
   fetch: () => Promise<void>
 }
 
-const useUserStore = create<UserStore>((set) => ({
+export const useUserStore = create<UserStore>((set) => ({
   user: undefined,
   fetch: () => UsersRepo.get().then(({ user }) => set({ user })),
 }))
-
-export default useUserStore

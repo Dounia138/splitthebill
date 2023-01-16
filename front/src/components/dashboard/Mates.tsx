@@ -1,12 +1,13 @@
-import useAppartmentStore from '$hooks/useAppartmentStore'
+import { useAppartmentStore, useUserStore } from '$hooks/index'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { UsersRepo } from '$repositories/UsersRepo'
 import { User } from '$types/api/User'
 import { UserPlusIcon } from '@heroicons/react/20/solid'
 import SendReminderForm from '$components/dashboard/SendReminderForm'
-import useUserStore from '$hooks/useUserStore'
+import { Appartment } from '$types/api/Appartment'
+import { AppartmentRepo } from '$repositories/AppartmentRepo'
 
 type ThreeDotsMenuProps = {
   mate: User
@@ -14,6 +15,7 @@ type ThreeDotsMenuProps = {
 
 const ThreeDotsMenu = ({ mate }: ThreeDotsMenuProps) => {
   const [isOpen, setIsOpen] = useState(false)
+  const dotsRef = useRef<HTMLDivElement>(null)
 
   const toggleAdmin = () => {
     setIsOpen(false)
@@ -26,8 +28,28 @@ const ThreeDotsMenu = ({ mate }: ThreeDotsMenuProps) => {
     })
   }
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dotsRef.current &&
+      !dotsRef.current.contains(event.target as HTMLElement)
+    ) {
+      setIsOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return (
-    <div className="h-6 w-6 absolute right-3 top-3 cursor-pointer">
+    <div
+      ref={dotsRef}
+      className="h-6 w-6 absolute right-3 top-3 cursor-pointer"
+    >
       <EllipsisVerticalIcon onClick={() => setIsOpen((isOpen) => !isOpen)} />
       <AnimatePresence>
         {isOpen && (
@@ -84,6 +106,12 @@ const Mates = () => {
     fetchAppartment()
   }, [])
 
+  const fireMate = (mateId: number) => {
+    AppartmentRepo.leave(mateId).then((data) => {
+      console.log(data)
+    })
+  }
+
   return (
     <>
       <ul
@@ -111,10 +139,11 @@ const Mates = () => {
                 <dt className="sr-only">Role</dt>
                 <dd className="mt-3">
                   <span
-                    className={`${mate.isAdmin
-                      ? 'bg-orange-100 text-orange-800'
-                      : 'bg-indigo-100 text-indigo-800'
-                      } rounded-full px-2 py-1 text-xs font-medium`}
+                    className={`${
+                      mate.isAdmin
+                        ? 'bg-orange-100 text-orange-800'
+                        : 'bg-indigo-100 text-indigo-800'
+                    } rounded-full px-2 py-1 text-xs font-medium`}
                   >
                     {mate.isAdmin ? 'Admin' : 'Membre'}
                   </span>
@@ -127,7 +156,7 @@ const Mates = () => {
                   <div className="flex w-0 flex-1">
                     <a
                       onClick={() => setUserId(mate.id)}
-                      className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
+                      className="cursor-pointer relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
                     >
                       Rappeler un ticket
                     </a>
@@ -137,7 +166,8 @@ const Mates = () => {
                   <div className="-ml-px flex w-0 flex-1">
                     <a
                       // href={`tel:${mate.phoneNumber}`}
-                      className="relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
+                      onClick={() => fireMate(mate.id)}
+                      className="cursor-pointer relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
                     >
                       Virer de la colloc'
                     </a>
@@ -147,7 +177,7 @@ const Mates = () => {
                   <div className="-ml-px flex w-0 flex-1">
                     <a
                       // href={`tel:${mate.phoneNumber}`}
-                      className="relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
+                      className="cursor-pointer relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
                     >
                       Quitter la colloc'
                     </a>
@@ -157,16 +187,16 @@ const Mates = () => {
             </div>
           </li>
         ))}
-        <li
-          className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow"
-        >
+        <li className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
           <div className="flex justify-center items-center flex-1 flex-col p-8 relative">
             <UserPlusIcon
               className="h-24 w-24 text-indigo-600"
               aria-hidden="true"
             />
             <div className="mt-6 mb-3">
-              <p className="text-sm text-gray-500">Invitez votre nouveau colloc en lui envoyant ce lien !</p>
+              <p className="text-sm text-gray-500">
+                Invitez votre nouveau colloc en lui envoyant ce lien !
+              </p>
             </div>
             <input
               id="invitation"
@@ -175,7 +205,10 @@ const Mates = () => {
               autoComplete="invitation"
               readOnly
               value={inviteLink}
-              onClick={(e) => { copyInviteLink(); e.currentTarget.select() }}
+              onClick={(e) => {
+                copyInviteLink()
+                e.currentTarget.select()
+              }}
               className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
             />
           </div>
@@ -194,10 +227,7 @@ const Mates = () => {
         </li>
       </ul>
       {userId && (
-        <SendReminderForm
-          handleClose={closeSendReminderForm}
-          userId={userId}
-        />
+        <SendReminderForm handleClose={closeSendReminderForm} userId={userId} />
       )}
     </>
   )

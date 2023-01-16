@@ -13,7 +13,7 @@ import {
 import classnames from 'classnames'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { User } from '$types/api/User'
-import useUserStore from '$hooks/useUserStore'
+import { useAppartmentStore, useUserStore } from '$hooks/index'
 
 const navigation = [
   { name: 'Aperçu', href: '/', icon: HomeIcon },
@@ -28,10 +28,13 @@ const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const me = useUserStore((state) => state.user)
+
   const fetchMe = useUserStore((state) => state.fetch)
+  const fetchAppartment = useAppartmentStore((state) => state.fetch)
 
   useEffect(() => {
     fetchMe()
+    fetchAppartment()
   }, [])
 
   const handleLogout = () => {
@@ -143,7 +146,10 @@ const DashboardLayout = () => {
                           <p className="text-base font-medium text-gray-800">
                             {me?.name}
                           </p>
-                          <p className="text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer" onClick={handleLogout}>
+                          <p
+                            className="text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
+                            onClick={handleLogout}
+                          >
                             Déconnexion
                           </p>
                         </div>
@@ -206,7 +212,10 @@ const DashboardLayout = () => {
                     <p className="text-sm font-medium text-gray-800">
                       {me?.name}
                     </p>
-                    <p className="text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer" onClick={handleLogout}>
+                    <p
+                      className="text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
+                      onClick={handleLogout}
+                    >
                       Déconnexion
                     </p>
                   </div>

@@ -23,7 +23,7 @@ export class TicketsRepo {
   }
 
   static async delete(id: number): Promise<void> {
-    return await api(`/users/me/appartment/tickets/${id}`, z.void(), {
+    return await api(`/users/me/appartment/tickets/${id}`, z.any(), {
       method: 'DELETE',
     })
   }
